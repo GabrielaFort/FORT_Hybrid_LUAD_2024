@@ -24,4 +24,4 @@ Data associated with this manuscript can be downloaded from the Gene Expression 
 Bulk RNA-seq (GSE281963), scRNA-seq (GSE281964), and ChIP-seq (GSE281961)
 
 ### Code Availability
-Original code and data analysis methods associated with this manuscript are available in this repository or within the methods desribed in our manuscript. ChIP-seq analysis was performed using the [SnyderLab_ChIPseq pipeline] (https://github.com/GabrielaFort/SnyderLab_ChIPseq/tree/main).
+Original code and data analysis methods associated with this manuscript are available in this repository or within the methods desribed in our manuscript. ChIP-seq analysis was performed using the [SnyderLab_ChIPseq pipeline](https://github.com/GabrielaFort/SnyderLab_ChIPseq/tree/main).
