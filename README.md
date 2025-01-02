@@ -18,3 +18,10 @@
 
 ### Abstract
 The ability of cancer cells to alter their identity, known as lineage plasticity, is crucial for tumor progression and therapy resistance. In lung adenocarcinoma (LUAD), tumor progression is characterized by a gradual loss of lineage fidelity and the emergence of non-pulmonary identity programs. This can lead to hybrid-identity (hybrid-ID) states in which developmentally incompatible identity programs are co-activated within individual cells. However, the molecular mechanisms underlying these identity shifts remain incompletely understood. Here, we identify the gastrointestinal (GI) transcriptional regulator HNF4α as a critical driver of tumor growth and proliferation in KRAS-driven LUAD. In LUAD cells that express the lung lineage specifier NKX2-1, HNF4α can induce a GI/liver-like state by directly binding and activating its canonical targets. HNF4α also forms an aberrant protein complex with NKX2-1, which disrupts NKX2-1 localization and dampens pulmonary identity within hybrid-ID LUAD. Sustained signaling through the RAS/MEK pathway is critical for maintaining the hybrid-ID state. Moreover, RAS/MEK inhibition augments NKX2-1 chromatin binding at pulmonary-specific genes and induces resistance-associated pulmonary signatures. Finally, we demonstrate that HNF4α depletion enhances sensitivity to pharmacologic KRASG12D inhibition. Collectively, our data show that co-expression of opposing lineage specifiers leads to a hybrid identity state that can drive tumor progression and dictate response to targeted therapy in LUAD.
+
+### Data Availability
+Data associated with this manuscript can be downloaded from the Gene Expression Omnibus:   
+Bulk RNA-seq (GSE281963), scRNA-seq (GSE281964), and ChIP-seq (GSE281961)
+
+### Code Availability
+Original code and data analysis methods associated with this manuscript are available in this repository or within the methods desribed in our manuscript. ChIP-seq analysis was performed using the [SnyderLab_ChIPseq pipeline] (https://github.com/GabrielaFort/SnyderLab_ChIPseq/tree/main).
