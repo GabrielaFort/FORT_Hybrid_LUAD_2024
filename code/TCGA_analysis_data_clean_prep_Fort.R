@@ -4,9 +4,6 @@
 # This R script was used to download and clean clinical and gene expression data
 # from TCGA and to run single sample GSEA for downstream plotting/analysis 
 
-####################### TCGA analysis for KPH manuscript #######################
-######################### Gabriela Fort 08.03.2024 #############################
-
 # Load required packages
 library(ggplot2)
 library(data.table)
