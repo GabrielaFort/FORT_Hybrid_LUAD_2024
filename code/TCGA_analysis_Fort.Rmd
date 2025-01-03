@@ -1,0 +1,115 @@
+---
+title: "TCGA_analysis_GF_082824"
+output: html_document
+date: "2024-08-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## This script uses processed data from TCGA_analysis_data_clean_prep_Fort.R
+## script to perform survival and correlation analyses
+
+## These analyses are related to Figures 1A, S1A, S2A, and S2J
+
+
+```{r}
+# Load required packages
+library(ggplot2)
+library(data.table)
+library(dplyr)
+library(survival)
+#install.packages('survminer')
+library(survminer)
+#install.packages('tab')
+library(tab)
+#install.packages('arsenal')
+library(arsenal)
+library(ggcorrplot)
+
+# Set working directory 
+setwd('/uufs/chpc.utah.edu/common/home/snydere-group2/Gabby/KPH_TCGA_analysis')
+
+# Read in data from data preparation/cleaning script
+tcga_data = read.csv("/uufs/chpc.utah.edu/common/home/snydere-group2/Gabby/KPH_TCGA_analysis/TCGA_KPH_survival_HNFstatus.csv")
+
+```
+
+
+## HNF4A survival analysis - related to Figure 1A
+
+### KM Curve
+```{r, echo=TRUE}
+survival_fit = survfit(Surv(Overall_Survival_Months,OS_status) ~ HNF_status, data = tcga_data)
+ggsurvplot(survival_fit, conf.int=F, pval = T, pval.method = F, risk.table = F, legend.title = "HNF4a Status",
+           legend.labs = c("HNF4a-High","HNF4a-Low"),palette = c('maroon','darkcyan'))
+```
+
+### Run coxPH model 
+```{r}
+cox = coxph(Surv(Overall_Survival_Months,OS_status) ~ HNF_status, data=tcga_data) 
+summary(cox)
+```
+
+### Make table to visualize distribution of various potential confounding variables
+```{r, results="asis"}
+concordance_table <- tableby(HNF_status ~ Diagnosis_Age + Ethnicity_Category + Race_Category + Sex + Tumor_Type + American_Joint_Committee_on_Cancer_Metastasis_Stage_Code +
+                              American_Joint_Committee_on_Cancer_Tumor_Stage_Code +
+                              Neoplasm_Disease_Stage_American_Joint_Committee_on_Cancer_Code, data=tcga_data)
+summary(concordance_table)
+```
+
+
+## EPS8L3 survival analysis - related to Figure S1A
+
+### Looking at top 47 expressors vs all others (same n's as HNF4A-high vs HNF4A-low groups)
+```{r}
+tcga_data = tcga_data %>% dplyr::mutate(EPS8L3_top = dplyr::case_when(EPS8L3 > quantile(EPS8L3,0.88) ~ "High",
+                                                                               TRUE ~ "Low"))
+
+survival_fit = survfit(Surv(Overall_Survival_Months,OS_status) ~ EPS8L3_top, data = tcga_data)
+ggsurvplot(survival_fit, conf.int=F, pval = T, pval.method = F, risk.table = F, legend.title = "EPS8L3 Level",
+           legend.labs = c("High","Low"),palette = c('darkcyan','maroon'))
+```
+
+### Run coxPH model 
+```{r}
+cox = coxph(Surv(Overall_Survival_Months,OS_status) ~ EPS8L3_top, data=tcga_data) 
+summary(cox)
+``` 
+
+
+## Correlation Analysis of HNF4A with other genes of interest - related to Figure S2A
+
+### Scatterplots
+```{r}
+genes_oi = c('LGALS4','HNF1A','EPS8L3')
+
+for (gene in genes_oi) {
+  print(ggscatter(tcga_data, x='HNF4A',y=gene,color='maroon',cor.coef = T,cor.method='spearman',
+                  conf.int=TRUE,add = c("reg.line"),ylab = paste0(gene," log2(TPM+1)"), xlab = "HNF4A log2(TPM+1)",
+                  title = paste0("Correlation between HNF4A and ",gene)))
+}
+```
+
+
+## Correlation Analysis of HNF4A with ssGSEA scores - related to Figure S2J
+
+### Scatterplots ('3154_1651_combined' score shown in manuscript)
+```{r}
+scores_oi = colnames(tcga_data[74:80])
+
+for (score in scores_oi) {
+  print(ggscatter(tcga_data, x='HNF4A',y=score,color='maroon',cor.coef = T,cor.method='spearman',
+                  conf.int=TRUE,add = c("reg.line"),ylab = score, xlab = "HNF4A log2(TPM+1)",
+                  title = "Correlation between HNF4A and ssGSEA scores"))
+}
+```
+
+
+
+
+
+
+
