@@ -59,26 +59,13 @@ ggplot(barplot_table, aes(x = Var2, y = Freq, fill = Var1)) +
   coord_cartesian(ylim=c(0.00,1.00))
 
 
-###### Integrate ALRA and FIESTA Imputation ######
+###### Integrate ALRA imputation ######
 KPvsKPH_tumor <- RunALRA(KPvsKPH_tumor) # Run imputation using ALRA model
 
-# Import FIESTA Imputed counts
-# These counts were generated using the FIESTA pipeline which can be found here:
-# https://github.com/TheSpikeLab/FIESTA
-fiesta_counts = readRDS('FIESTA_counts_from_ben/expression_matrix_GF_WNMF2_scaled_Thresholded.rds')
-
-# Add FIESTA counts to another assay of the Seurat object
-columns = colnames(GetAssayData(object = KPvsKPH_tumor, slot = "data"))
-rows = rownames(GetAssayData(object = KPvsKPH_tumor, slot = "data"))[-1]
-colnames(fiesta_counts) = columns
-rownames(fiesta_counts) = rows
-
-KPvsKPH_tumor[["fiesta"]] <- CreateAssayObject(data = fiesta_counts )
 
 # Use to toggle between assays for plotting individual genes
 DefaultAssay(KPvsKPH_tumor) <- "RNA"
 DefaultAssay(KPvsKPH_tumor) <- "alra"
-DefaultAssay(KPvsKPH_tumor) <- "fiesta"
 
 
 ### Plot genes of interest
@@ -89,12 +76,11 @@ genes_oi = c('Hnf1a','Lgals4','Hnf4g','Pklr','Nkx2-1','Spock2','Zeb2','Cldn4','V
              'Hopx','Ager','Cxcl15','Sftpc')
 
 for (gene in genes_oi) {
-pdf(file = paste0("/uufs/chpc.utah.edu/common/home/snydere-group2/Gabby/scRNAseq_analysis/imputation_plots_010625/",gene,"_fiesta_ordered.pdf"), width = 5, height = 4.5)
+pdf(file = paste0("/uufs/chpc.utah.edu/common/home/snydere-group2/Gabby/scRNAseq_analysis/imputation_plots_010625/",gene,"_alra.pdf"), width = 5, height = 4.5)
 print(FeaturePlot(KPvsKPH_tumor, features = gene, pt.size=0.3, 
             cols=c("peachpuff1","indianred","red4"), order=TRUE))
 dev.off()
 }
-
 
 
 ### Gene signature scoring and plotting 
